@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Credits
 
 All images courtesy of Unsplash (https://unsplash.com).
@@ -7,4 +8,15 @@ All images courtesy of Unsplash (https://unsplash.com).
 - Molly Porter (https://unsplash.com/search/city?photo=K7oqWgDJQ6E)
 - Lily lvnatikk (https://unsplash.com/photos/24ha6GoKHqs)
 
+=======
+# Credits
+
+All images courtesy of Unsplash (https://unsplash.com).
+
+- Bagus Ghufron (https://unsplash.com/search/city?photo=MvFaJYNLdWk)
+- Changyu Hu (https://unsplash.com/@charliehu?photo=xhRcwmfRyZs)
+- Molly Porter (https://unsplash.com/search/city?photo=K7oqWgDJQ6E)
+- Lily lvnatikk (https://unsplash.com/photos/24ha6GoKHqs)
+
+>>>>>>> 4804a26a9431a4606451cabdb7ffd6d9b3be9016
 Background video courtesy of Coverr (https://coverr.co).
