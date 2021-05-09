@@ -11,47 +11,46 @@
         </script>";
     }
 
-    $user_id = $_SESSION["login"];
+    $user_id = $_GET["user_id"];
     $user = findOne("SELECT * FROM user WHERE id = '$user_id'");
 
     // Memeriksa method post yang dikirim ke halaman ini
     if(isset($_POST["update"])) {
         $user_id = $_POST["id"];
+        $role  =  $_POST["role"];
         $username = $_POST["username"];
+        $password = $_POST["password"];
 		$email = $_POST["email"]; // string
         $avatar = $_POST["old_avatar"]; // string
         $file = $_FILES["new_avatar"]; // $file["name"];
 
-		        // $file => array asosiatif name(mungkin kosong), size, tmp_name
+        // $file => array asosiatif name(mungkin kosong), size, tmp_name
 
         // Memeriksa adanya file yang diupoload, (file baru, file lama)
         if($file["name"] != null) {
             $avatar = uploadAvatar($file, $avatar);
         }
 
-        $exist = findOne("SELECT * FROM user WHERE username = '$username'");
-        if($username != $user["username"] && $exist != null) {
+        if ($password!="") {
+            $password  =  password_hash($_POST["password"], PASSWORD_DEFAULT);
+            $update_user = commit("UPDATE user SET role = '$role', username = '$username', password = '$password', email = '$email', avatar = '$avatar' WHERE id = '$user_id'");            
+        } else {
+            $update_user = commit("UPDATE user SET role = '$role', username = '$username', email = '$email', avatar = '$avatar' WHERE id = '$user_id'");            
+        }
+
+        if($update_user > 0) {
             echo"
             <script>
-                alert('Username telah terdaftar, pilih username lain');
-                document.location.href = 'profile.php';
+                alert('User berhasil diubah');
+                document.location.href = 'admin.php';
             </script>";
-        }else {
-			$update_user = commit("UPDATE user SET username = '$username', email = '$email', avatar = '$avatar' WHERE id = '$user_id'");
-			if($update_user > 0) {
-				echo"
-				<script>
-					alert('Profile berhasil diubah');
-					document.location.href = 'profile.php';
-				</script>";
-			}
-			else {
-				echo"
-				<script>
-					alert('Profile gagal diubah');
-					document.location.href = 'profile.php';
-				</script>";
-			}
+        }
+        else {
+            echo"
+            <script>
+                alert('User gagal diubah');
+                document.location.href = 'admin.php';
+            </script>";
         }
     }
 ?>
@@ -107,6 +106,26 @@
 										<div class="h6 font-weight-300"><?= $user["email"]; ?></div>
 									</div>
 									<br/>
+                                    <div class="field half">
+                                        <select class="form-control" name="role">
+                                            <?php
+                                            if ($user["role"]=="admin") {
+                                                $opt1 = "selected";
+                                                $opt2 = "";
+                                            } else {
+                                                $opt1 = "";
+                                                $opt2 = "selected";
+                                            }
+                                            ?>
+                                            <option disabled="">-- Pilih Role --</option>
+                                            <option value="admin" <?= $opt1; ?> >admin</option>
+                                            <option value="member" <?= $opt2; ?>>member</option>
+                                        </select>
+                                        <div class="form-control-feedback">
+                                            <i class="icon-user text-muted"></i>
+                                        </div>
+                                    </div>
+                                    <br/>
 									<div class="field half">
 										<input name="username" value="<?= $user["username"]; ?>" id="username" type="text" placeholder="Username">
 									</div>
@@ -115,6 +134,13 @@
 										<input name="email" value="<?= $user["email"]; ?>" id="email" type="email" placeholder="Email">
 									</div>
 									<br>
+                                    <div class="field half">
+                                        <input type="password" class="form-control" placeholder="Password" name="password">
+                                        <div class="form-control-feedback">
+                                            <i class="icon-lock2 text-muted"></i>
+                                        </div>
+                                    </div>
+                                    <br>
 									<div class="custom-file">
 										<input type="file" class="custom-file-input" id="customFile"
 											name="new_avatar">

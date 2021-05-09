@@ -1,16 +1,87 @@
 <?php
-	require "config.php";
-	session_start();
+    require "config.php";
+    session_start();
+    date_default_timezone_set("Asia/Jakarta");
 
-	// Memeriksa user logout atau belum login
-	if(!isset($_SESSION["login"]) || isset($_GET["logout"]) || !isset($_SESSION["admin"])) {
-		session_destroy();
-		echo"
-		<script>
-			document.location.href = 'login.php';
-		</script>";
-	}
+    // Memeriksa user logout atau belum login
+    if(!isset($_SESSION["login"]) || isset($_GET["logout"]) || !isset($_SESSION["admin"])) {
+        session_destroy();
+        echo"
+        <script>
+            document.location.href = 'login.php';
+        </script>";
+    }
+
+    $user_id = $_SESSION['login'];
+    // $user = findOne("SELECT * FROM user WHERE id = '$user_id'");
+
+    $users = findAll("SELECT * FROM user");
+
+    // Aksi ADD USER
+    if(isset($_POST["register"])) {
+        $role  =  $_POST["role"];
+        $username  =  $_POST["username"];
+        $email  =  $_POST["email"];
+        $avatar = ""; // string
+        $file = $_FILES["new_avatar"]; // $file["name"];
+
+        // $file => array asosiatif name(mungkin kosong), size, tmp_name
+
+        // Memeriksa adanya file yang diupoload, (file baru, file lama)
+        if($file["name"] != null) {
+            $avatar = uploadAvatar($file, $avatar);
+        }
+
+        // Enkripsi password
+        $password  =  password_hash($_POST["password"], PASSWORD_DEFAULT);
+
+        $user  =  findOne("SELECT  *  FROM user WHERE username = '$username'");
+        if($user  !=  null) {
+			echo"
+            <script>
+                alert('Username telah terdaftar, pilih username lain');
+                document.location.href = 'admin.php';
+            </script>";
+        }
+        else {
+            $create_user  =  commit("INSERT  INTO user SET  role  = '$role', username = '$username', email = '$email', password  = '$password', avatar  = '$avatar'");
+            if($create_user  >  0) {
+                echo"
+                <script>
+                    alert('Tambah Akun User berhasil');
+                    document.location.href = 'admin.php';
+                </script>";
+            }
+            else {
+                echo"
+                <script>
+                    alert('Tambah Akun User gagal');
+                    document.location.href = 'admin.php';
+                </script>";
+            }
+        }
+    }
+
+    if(isset($_GET["delete"])) {
+        $user_id = $_GET["delete"];
+
+        $delete_user = commit("DELETE FROM user WHERE id='$user_id'");
+        if($delete_user < 0) {
+            echo"
+            <script>
+                alert('User gagal dihapus');
+                document.location.href = 'admin.php';
+            </script>";
+        }
+        echo"
+        <script>
+            alert('User berhasil dihapus');
+            document.location.href = 'admin.php';
+        </script>";
+    }
 ?>
+
+
 <!DOCTYPE HTML>
 <html>
 	<head>
@@ -18,6 +89,7 @@
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<link rel="stylesheet" href="assets/css/main.css" />
+		<link href="assets/global_assets/css/icons/icomoon/styles.css" rel="stylesheet" type="text/css">
 	</head>
 	<body>
 					<!-- Header -->
@@ -27,15 +99,12 @@
 			</header>
 
 		<!-- Nav -->
-			<nav id="menu">
-				<ul class="links">
-					<li><a href="index.php">Home</a></li>
-					<li><a href="login.php">Login</a></li>
-					<li><a href="register.php">Register</a></li>
-					<li><a href="generic.html">Generic</a></li>
-					<li><a href="elements.html">Elements</a></li>
-				</ul>
-			</nav>
+            <nav id="menu">
+                <ul class="links">
+                    <li><a href="home.php">Home</a></li>
+                    <li><a href="?logout">Logout</a></li>
+                </ul>
+            </nav>
 			<section id="three" class="wrapper style2">
 				<div class="inner">
 					<section>
@@ -43,8 +112,19 @@
 							<div class="content">
 								<h2 class="align-center">Tambah Akun</h2>
 								<hr />
-								<form role="form" method="post">
+								<form role="form" method="post" enctype="multipart/form-data">
 									<center>
+										<div class="field half">
+											<select class="form-control" name="role">
+												<option selected="" disabled="">-- Pilih Role --</option>
+												<option value="admin">admin</option>
+												<option value="member">member</option>
+											</select>
+											<div class="form-control-feedback">
+												<i class="icon-user text-muted"></i>
+											</div>
+										</div>
+										<br>
 										<div class="field half">
 											<input name="username" id="username" type="text" placeholder="Username">
 										</div>
@@ -84,64 +164,37 @@
 										</tr>
 									</thead>
 									<tbody>
-										<tr>
-											<td class="text-center align-middle">1</td>
-											<td class="align-middle">
-												<img src="assets/img/faces/team-1.jpg" alt="Rounded image" class="rounded shadow"
-													width="70" height="70">
-											</td>
-											<td class="align-middle">member</td>
-											<td class="align-middle">Harlequin</td>
-											<td class="align-middle">harle@quin.oke</td>
-											<td class="align-middle">
-												<a type="button" rel="tooltip" class="btn btn-info btn-icon btn-sm mt-1" href="###">
-													<i class="ni ni-settings-gear-65 pt-1 text-white"></i>
-												</a>
-												<a type="button" rel="tooltip" class="btn btn-danger btn-icon btn-sm mt-1 mr-2"
-													href="###">
-													<i class="ni ni-fat-remove pt-1 text-white"></i>
-												</a>
-											</td>
-										</tr>
-										<tr>
-											<td class="text-center align-middle">2</td>
-											<td class="align-middle">
-												<img src="assets/img/faces/team-1.jpg" alt="Rounded image" class="rounded shadow"
-													width="70" height="70">
-											</td>
-											<td class="align-middle">member</td>
-											<td class="align-middle">Harlequin</td>
-											<td class="align-middle">harle@quin.oke</td>
-											<td class="align-middle">
-												<a type="button" rel="tooltip" class="btn btn-info btn-icon btn-sm mt-1" href="###">
-													<i class="ni ni-settings-gear-65 pt-1 text-white"></i>
-												</a>
-												<a type="button" rel="tooltip" class="btn btn-danger btn-icon btn-sm mt-1 mr-2"
-													href="###">
-													<i class="ni ni-fat-remove pt-1 text-white"></i>
-												</a>
-											</td>
-										</tr>
-										<tr>
-											<td class="text-center align-middle">3</td>
-											<td class="align-middle">
-												<img src="assets/img/faces/team-1.jpg" alt="Rounded image" class="rounded shadow"
-													width="70" height="70">
-											</td>
-											<td class="align-middle">member</td>
-											<td class="align-middle">Harlequin</td>
-											<td class="align-middle">harle@quin.oke</td>
-											<td class="align-middle">
-												<a type="button" rel="tooltip" class="btn btn-info btn-icon btn-sm mt-1" href="###">
-													<i class="ni ni-settings-gear-65 pt-1 text-white"></i>
-												</a>
-												<a type="button" rel="tooltip" class="btn btn-danger btn-icon btn-sm mt-1 mr-2"
-													href="###">
-													<i class="ni ni-fat-remove pt-1 text-white"></i>
-												</a>
-											</td>
-										</tr>
-									</tbody>
+                                        <?php 
+                                        $no = 1;
+                                        foreach ($users as $user) : ?>
+                                            <tr>
+                                                <td width="3%"><?= $no; ?>.</td>
+                                                <td>
+                                                    <?php if ($user["avatar"] != null) : ?>
+                                                        <img src="avatar/<?= $user["avatar"]; ?>" width="60" height="60" alt="">
+                                                    <?php else : ?>
+                                                        <img src="assets/images/avatar-1.png" width="60" height="60" alt="">
+                                                    <?php endif; ?>
+
+                                                </td>
+                                                <td><?= $user["role"]; ?></td>
+                                                <td><?= $user["username"]; ?></td>
+                                                <td><?= $user["email"]; ?></td>
+                                                <td class="text-center" width="15%">    
+                                                    <div class="btn-group">
+                                                        <a href="edit.php?user_id=<?= $user['id']; ?>" class="btn btn-success btn-xs"  data-popup="tooltip" title="Ubah Data">
+                                                            <i class="icon-pencil"></i> 
+                                                        </a>&nbsp;
+                                                        <a href="?delete=<?= $user['id']; ?>" class="btn btn-danger btn-xs"  data-popup="tooltip" title="Hapus Data">
+                                                            <i class="icon-trash"></i>
+                                                        </a>&nbsp;
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <?php 
+                                            $no++;
+                                        endforeach; ?>
+                                    </tbody>
 								</table>
 							</div>
 							</center>

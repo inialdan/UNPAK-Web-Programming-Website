@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 <!DOCTYPE HTML>
 <!--
 	Transitive by TEMPLATED
@@ -23,7 +22,7 @@
 		<!-- Nav -->
 			<nav id="menu">
 				<ul class="links">
-					<li><a href="profile.php">Home</a></li>
+					<li><a href="home.php">Home</a></li>
 					<li><a href="login.php">Login</a></li>
 					<li><a href="register.php">Register</a></li>
 				</ul>

@@ -37,3 +37,45 @@ function findAll($query) {
     }
     return $rows; // Mengembalikan array 2 dimensi
 }
+
+// Mengupload foto profile, (file baru, file lama)
+function uploadAvatar($new, $old) { // $new adalah array asosiatif, $old nama file lama type string
+    $name = $new["name"];
+    $size = $new["size"];
+    $tmp_name = $new["tmp_name"];
+    $valid_type = ["jpg", "jpeg", "png"]; // tipe file gambar
+    $type = explode(".", $name); // "gema.nur.sidik.jpeg" => ["gema", "nur", "sidik", "jpeg"]
+    $type = strtolower(end($type));
+
+    // Memeriksa tipe file gambar
+    if(!in_array($type, $valid_type)) {
+        echo"
+        <script>
+            alert('Type file tidak didukung');
+            document.location.href = '';
+        </script>";
+        exit(); // Membatalkan script selanjutnya
+    }
+
+    // Memeriksa ukuran file kurang dari 1 MB
+    if($size > 1000000) {
+        echo"
+        <script>
+            alert('Ukuran file terlalu besar');
+            document.location.href = '';
+        </script>";
+        exit(); // Membatalkan script selanjutnya
+    }
+    
+    // Membuat nama file baru
+    $avatar = uniqid() . "." . $type;
+
+    // Menghapus file lama
+    if($old != null && file_exists("avatar/" . $old)) {
+        unlink("avatar/" . $old);
+    }
+
+    // Menyimpan file baru
+    move_uploaded_file($tmp_name, "avatar/" . $avatar);
+    return $avatar; // Mengembalikan nama file baru
+}
