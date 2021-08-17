@@ -120,9 +120,6 @@
 												<option value="admin">admin</option>
 												<option value="member">member</option>
 											</select>
-											<div class="form-control-feedback">
-												<i class="icon-user text-muted"></i>
-											</div>
 										</div>
 										<br>
 										<div class="field half">
@@ -165,35 +162,36 @@
 									</thead>
 									<tbody>
                                         <?php 
-                                        $no = 1;
-                                        foreach ($users as $user) : ?>
-                                            <tr>
-                                                <td width="3%"><?= $no; ?>.</td>
-                                                <td>
-                                                    <?php if ($user["avatar"] != null) : ?>
-                                                        <img src="avatar/<?= $user["avatar"]; ?>" width="60" height="60" alt="">
-                                                    <?php else : ?>
-                                                        <img src="assets/images/avatar-1.png" width="60" height="60" alt="">
-                                                    <?php endif; ?>
+                                            $no = 1;
+                                            foreach ($users as $user) : ?>
+                                                <tr>
+                                                    <td width="3%"><?= $no; ?>.</td>
+                                                    <td>
+                                                        <?php if ($user["avatar"] != null) : ?>
+                                                            <img src="avatar/<?= $user["avatar"]; ?>" width="60" height="60" alt="">
+                                                        <?php else : ?>
+                                                            <img src="assets/images/avatar-1.png" width="60" height="60" alt="">
+                                                        <?php endif; ?>
 
-                                                </td>
-                                                <td><?= $user["role"]; ?></td>
-                                                <td><?= $user["username"]; ?></td>
-                                                <td><?= $user["email"]; ?></td>
-                                                <td class="text-center" width="15%">    
-                                                    <div class="btn-group">
-                                                        <a href="edit.php?user_id=<?= $user['id']; ?>" class="btn btn-success btn-xs"  data-popup="tooltip" title="Ubah Data">
-                                                            <i class="icon-pencil"></i> 
-                                                        </a>&nbsp;
-                                                        <a href="?delete=<?= $user['id']; ?>" class="btn btn-danger btn-xs"  data-popup="tooltip" title="Hapus Data">
-                                                            <i class="icon-trash"></i>
-                                                        </a>&nbsp;
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                            <?php 
-                                            $no++;
-                                        endforeach; ?>
+                                                    </td>
+                                                    <td><?= $user["role"]; ?></td>
+                                                    <td><?= $user["username"]; ?></td>
+                                                    <td><?= $user["email"]; ?></td>
+                                                    <td class="text-center" width="15%">    
+                                                        <div class="btn-group">
+                                                            <a href="edit.php?user_id=<?= $user['id']; ?>" class="btn btn-success btn-xs"  data-popup="tooltip" title="Ubah Data">
+                                                                <i class="icon-pencil"></i> 
+                                                            </a>&nbsp;
+                                                            <a href="?delete=<?= $user['id']; ?>" class="btn btn-danger btn-xs"  data-popup="tooltip" title="Hapus Data">
+                                                                <i class="icon-trash"></i>
+                                                            </a>&nbsp;
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <?php 
+                                                $no++;
+                                            endforeach; 
+                                        ?>
                                     </tbody>
 								</table>
 							</div>

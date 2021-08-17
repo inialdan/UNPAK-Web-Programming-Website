@@ -100,15 +100,13 @@
 								<div class="content">
 									<div class="row py-3 align-items-center">
 										<div class="col-sm-3 text-center">
-
 											<?php if($post["avatar"] != null) : ?>
 												<img src="avatar/<?= $post["avatar"]; ?>" alt="Rounded image" class="img-fluid rounded shadow"
 													width="120">
 											<?php else : ?>
-												<img src="assets/img/faces/team-1.jpg" alt="Rounded image" class="img-fluid rounded shadow"
+												<img src="assets/images/team-1.jpg" alt="Rounded image" class="img-fluid rounded shadow"
 													width="120">
 											<?php endif; ?>
-													
 										</div>
 										<div class="col-sm-9">
 											<p class="font-weight-bold">

@@ -92,13 +92,11 @@
 									<input value="<?= $user["avatar"]; ?>" type="hidden" name="old_avatar">
 									<div class="card-profile-image mt-3">
 										<a href="javascript:;">
-									
-										<?php if($user["avatar"] != null) : ?>
-											<img src="avatar/<?= $user["avatar"]; ?>" class="rounded-circle" width="170" height="170">
-										<?php else : ?>
-											<img src="assets/img/faces/team-1.jpg" class="rounded-circle" width="170" height="170">
-										<?php endif; ?>
-											
+											<?php if($user["avatar"] != null) : ?>
+												<img src="avatar/<?= $user["avatar"]; ?>" class="rounded-circle" width="170" height="170">
+											<?php else : ?>
+												<img src="assets/img/faces/team-1.jpg" class="rounded-circle" width="170" height="170">
+											<?php endif; ?>
 										</a>
 									</div>
 									<div class="text-center mt-9">
